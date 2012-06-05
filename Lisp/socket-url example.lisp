@@ -1,3 +1,7 @@
+;;文件以chinese-gb18030-dos编码方式保存
+;;所以加载的方法要用下面方式：
+;;(load "d:/socket-url example.lisp" :external-format :gbk)
+;;
 ;;利用 socket 连接服务器   包括连接http 
 ;;(setq my-socket (ccl:make-socket
 ;;                 :address-family :internet
