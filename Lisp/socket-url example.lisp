@@ -34,3 +34,31 @@
 (defmacro 定义变量 (变量名 值)
   `(setq ,变量名 ,值) 
   )
+
+
+
+
+(defmacro 定义变量1 (&rest 参数与值)
+  `(setq ,@参数与值) 
+  )
+
+(defmacro 定义函数 (函数名 参数 &rest 主体)
+  `(defun ,函数名 ,参数
+       ,@主体
+       )
+  )
+
+
+(defmacro aaa (a b)
+  `(progn
+     (defun aa () (print ))
+     (print ,a)
+     (print ,b)
+     )
+  )
+
+(defmacro myfun (funname args &rest body)
+     `(defun ,funname ,args
+       ,@body
+       )     
+  )
