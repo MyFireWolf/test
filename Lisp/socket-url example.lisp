@@ -10,6 +10,7 @@
 
 ;;(setq a (ccl:make-socket :type :stream :connect :active :remote-host "www.qq.com" :remote-port 80))
 ;;(ccl:stream-write-string a "GET / HTTP/1.1
+;;Host:www.qq.com
 ;;Connection:Close
 ;;
 ;;")
