@@ -28,6 +28,9 @@ a=int(x)+int(y)
 #a=55555555555555555555+45678911
 astr=str(a)
 print u"第一次运算结果:"+astr
+if len(astr)<20:
+    for i in range(20-len(astr)):
+        astr='0'+astr
 if len(astr)==21:
     astr=astr[1:]
     onestr=astr[0:10]
