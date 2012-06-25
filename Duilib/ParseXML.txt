@@ -1,0 +1,144 @@
+bool CMarkup::_Parse(LPTSTR& pstrText, ULONG iParent)
+{
+	_SkipWhitespace(pstrText);
+    ULONG iPrevious = 0;
+	::MessageBox(NULL,"for...","for.....",MB_OK);
+    for( ; ; ) 
+    {
+        if( *pstrText == _T('\0') && iParent <= 1 ) return true;
+		_SkipWhitespace(pstrText);//pstrText="<Window mininfo="200,360" size="360,600"><Font name="Ó×Ô²" size="16" default="true" />" 
+        if( *pstrText != _T('<') ) return _Failed(_T("Expected start tag"), pstrText);
+        if( pstrText[1] == _T('/') ) return true;
+        *pstrText++ = _T('\0');//pstrText="\0Window mininfo="200,360" size="360,600"><Font name="Ó×Ô²"
+        _SkipWhitespace(pstrText);
+        // Skip comment or processing directive
+        if( *pstrText == _T('!') || *pstrText == _T('?') ) {
+            TCHAR ch = *pstrText;
+            if( *pstrText == _T('!') ) ch = _T('-');
+            while( *pstrText != _T('\0') && !(*pstrText == ch && *(pstrText + 1) == _T('>')) ) pstrText = ::CharNext(pstrText);
+            if( *pstrText != _T('\0') ) pstrText += 2;
+            _SkipWhitespace(pstrText);
+            continue;
+        }
+        _SkipWhitespace(pstrText);
+        // Fill out element structure
+        XMLELEMENT* pEl = _ReserveElement();
+        ULONG iPos = pEl - m_pElements;//iPos=1
+        pEl->iStart = pstrText - m_pstrXML;//pstrText="Window mininfo="200,360" size="360,600"><Font name="Ó×Ô²"
+        pEl->iParent = iParent;//iParent=0 iPrevious=0
+        pEl->iNext = pEl->iChild = 0;
+
+		//::MessageBox(NULL,"b","c",MB_OK);
+        if( iPrevious != 0 ) 
+		{
+			m_pElements[iPrevious].iNext = iPos;
+			
+			char strpos[80];
+			sprintf(strpos,"iPrevious:%d -- iPos: %d\nm_pElements[%d]->iNext: %d",iPrevious,iPos,iPrevious,m_pElements[iPrevious].iNext);
+			//::MessageBox(NULL,strpos,"iPrevious",MB_OK);
+		}
+        else if( iParent > 0 ) m_pElements[iParent].iChild = iPos;
+		
+        iPrevious = iPos;//iPrevious=1
+        // Parse name
+        LPCTSTR pstrName = pstrText;
+        _SkipIdentifier(pstrText);//pstrText="Window mininfo="200,360" size="360,600"><Font name="Ó×Ô²"
+        LPTSTR pstrNameEnd = pstrText;//pstrText=" mininfo="200,360" size="360,600"><Font name="Ó×Ô²"
+        if( *pstrText == _T('\0') ) return _Failed(_T("Error parsing element name"), pstrText);
+        // Parse attributes
+		//::MessageBox(NULL,pstrNameEnd,"pstrnameend",MB_OK);
+        if( !_ParseAttributes(pstrText) ) return false;//pstrText=" mininfo="200,360" size="360,600"><Font name="Ó×Ô²"
+        _SkipWhitespace(pstrText);
+        if( pstrText[0] == _T('/') && pstrText[1] == _T('>') )
+        {
+            pEl->iData = pstrText - m_pstrXML;
+            *pstrText = _T('\0');
+            pstrText += 2;
+        }
+        else
+        {
+            if( *pstrText != _T('>') ) return _Failed(_T("Expected start-tag closing"), pstrText);
+            // Parse node data
+            pEl->iData = ++pstrText - m_pstrXML;
+            LPTSTR pstrDest = pstrText;
+            if( !_ParseData(pstrText, pstrDest, _T('<')) ) return false;
+            // Determine type of next element
+            if( *pstrText == _T('\0') && iParent <= 1 ) return true;
+            if( *pstrText != _T('<') ) return _Failed(_T("Expected end-tag start"), pstrText);
+            if( pstrText[0] == _T('<') && pstrText[1] != _T('/') ) 
+            {
+				//::MessageBox(NULL,"here","here",MB_OK);
+                if( !_Parse(pstrText, iPos) ) return false;
+            }
+            if( pstrText[0] == _T('<') && pstrText[1] == _T('/') ) 
+            {
+                *pstrDest = _T('\0');
+                *pstrText = _T('\0');
+                pstrText += 2;
+                _SkipWhitespace(pstrText);
+                SIZE_T cchName = pstrNameEnd - pstrName;
+                if( _tcsncmp(pstrText, pstrName, cchName) != 0 ) return _Failed(_T("Unmatched closing tag"), pstrText);
+                pstrText += cchName;
+                _SkipWhitespace(pstrText);
+                if( *pstrText++ != _T('>') ) return _Failed(_T("Unmatched closing tag"), pstrText);
+            }
+        }
+        *pstrNameEnd = _T('\0');
+        _SkipWhitespace(pstrText);
+    }
+	
+}
+
+bool CMarkup::_ParseAttributes(LPTSTR& pstrText)
+{   //pstrText=" mininfo="200,360" size="360,600"><Font name="Ó×Ô²"
+    if( *pstrText == _T('>') ) return true;
+    *pstrText++ = _T('\0');//pstrText="\0mininfo="200,360" size="360,600"><Font name="Ó×Ô²"
+    _SkipWhitespace(pstrText);//pstrText="mininfo="200,360" size="360,600"><Font name="Ó×Ô²"
+    while( *pstrText != _T('\0') && *pstrText != _T('>') && *pstrText != _T('/') ) {
+        _SkipIdentifier(pstrText);  //pstrText="="200,360" size="360,600"><Font name="Ó×Ô²"
+        LPTSTR pstrIdentifierEnd = pstrText;//pstrText="="200,360" size="360,600"><Font name="Ó×Ô²"
+        _SkipWhitespace(pstrText);  // pstrText="="200,360" size="360,600"><Font name="Ó×Ô²"
+        if( *pstrText != _T('=') ) return _Failed(_T("Error while parsing attributes"), pstrText);
+        *pstrText++ = _T(' ');   // pstrText=" "200,360" size="360,600"><Font name="Ó×Ô²"
+        *pstrIdentifierEnd = _T('\0');// pstrText="\0"200,360" size="360,600"><Font name="Ó×Ô²"
+        _SkipWhitespace(pstrText);  // pstrText=""200,360" size="360,600"><Font name="Ó×Ô²"
+        if( *pstrText++ != _T('\"') ) return _Failed(_T("Expected attribute value"), pstrText);
+        LPTSTR pstrDest = pstrText; // pstrText="200,360" size="360,600"><Font name="Ó×Ô²" ×÷Îª²ÎÊý´«µÝ¸ø_ParseData()
+        if( !_ParseData(pstrText, pstrDest, _T('\"')) ) return false;// pstrText="" size="360,600"><Font name="Ó×Ô²"
+        if( *pstrText == _T('\0') ) return _Failed(_T("Error while parsing attribute string"), pstrText);
+        *pstrDest = _T('\0');// pstrText="\0 size="360,600"><Font name="Ó×Ô²"
+        if( pstrText != pstrDest ) *pstrText = _T(' ');
+        pstrText++;// pstrText="" size="360,600"><Font name="Ó×Ô²"
+        _SkipWhitespace(pstrText);// pstrText=" size="360,600"><Font name="Ó×Ô²"
+    }     // pstrText="size="360,600"><Font name="Ó×Ô²"
+    return true;
+}
+
+bool CMarkup::_ParseData(LPTSTR& pstrText, LPTSTR& pstrDest, char cEnd)
+{	// pstrText="200,360" size="360,600"><Font name="Ó×Ô²"
+    while( *pstrText != _T('\0') && *pstrText != cEnd ) {
+		if( *pstrText == _T('&') ) {
+			while( *pstrText == _T('&') ) {
+				_ParseMetaChar(++pstrText, pstrDest);
+			}
+			if (*pstrText == cEnd)
+				break;
+		}
+
+        if( *pstrText == _T(' ') ) {
+            *pstrDest++ = *pstrText++;
+            if( !m_bPreserveWhitespace ) _SkipWhitespace(pstrText);
+        }
+        else {
+            LPTSTR pstrTemp = ::CharNext(pstrText);
+            while( pstrText < pstrTemp) {
+                *pstrDest++ = *pstrText++;
+            }
+        }
+    }
+    // Make sure that MapAttributes() works correctly when it parses
+    // over a value that has been transformed.
+    LPTSTR pstrFill = pstrDest + 1;// pstrText="" size="360,600"><Font name="Ó×Ô²"
+    while( pstrFill < pstrText ) *pstrFill++ = _T(' ');
+	return true;// pstrFill=" size="360,600"><Font name="Ó×Ô²"
+}
