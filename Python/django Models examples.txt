@@ -1,0 +1,126 @@
+#!/usr/bin/python
+# -*- coding: utf-8 -*-
+
+from django.db import models
+
+# Create your models here.
+ 
+class Blog(models.Model):
+    name=models.CharField(max_length=100)
+    def __unicode__(self):
+        return self.name
+
+class Entry(models.Model):
+    blog=models.ForeignKey(Blog)
+    headline=models.CharField(max_length=255)
+
+    def __unicode__(self):
+        return self.headline
+
+class b(models.Model):
+    name=models.CharField(max_length=100)
+    def __unicode__(self):
+        return self.name
+
+class c(models.Model):
+    name=models.CharField(max_length=100)
+    bs=models.ManyToManyField(b)  #这名是关键，两个表关联，有一个中
+					#存在就可以了，不需要两个表都用这条语句models.ManyToManyField(c)   
+    def __unicode__(self):
+        return self.name
+
+"""
+   多对多关系
+   关键是两个表多对多关联,一定要先生成（save) 两个实例，之后再关联，我的理解是这样的
+   b1=b(name='b1')
+   b1.save()
+   c1=c(name='c1')
+   c1.save()
+   c1.bs.add(b1)
+   b1.c_set.add(c1)
+
+   以下是简单操作
+   b1=b(name='b1')
+   b1.save()
+   c1=c(name='c1')
+   c1.bs.add(b1)    #这句出错，一定要先保存c1才行
+   c1.save()
+   c1.bs.add(b1)
+
+   b1.c_set.add(c1)
+
+   b2=b(name='b2')
+   b2.save()
+   c1.bs.add(b2)
+   
+   b3=b(name='b3')
+   b3.save()
+   #b3与c1关联
+   b3.c_set.add(c1)
+   或者c1.bs.add(b3)
+   #b3与c2关联
+   c2=c(name='c2')
+   c2.save()
+   b3.c_set.add(c2)
+   或者c2.bs.add(b3)
+   b3.c_set.add(c1)  #与c1关联
+
+
+   #查找与反查找与外键（昨天的相似）相似
+   b.objects.all()[0].c_set.all()
+   c.objects.all()[0].bs.all()
+   #同样可进行update的操作
+   b.objects.all()[0].c_set.all().update(name='ccc-b1')
+  
+_______________________________________________________
+   
+   主键与外键关系
+    b=Blog(name='yexiaoting')
+    b.save()
+    entry=Entry(blog=b,headline='entry-yexiaoting')
+    entry.save()
+
+    lst=Blog.objects.filter(name='yexiaoting')  #查找出的是一个[ ] 列表
+    b1=lst[0].entry_set.all()                   #lst没有 entry_set属性
+
+    entry1=Entry(blog=Blog(name='f'),headline='entry-f')
+    entry1.blog.save()   #数据库中生成有效
+    entry1.save()        #数据库中生成无效,提示出错
+
+    entry1=Entry(blog=Blog.objects.filter(name='yexiaoting')[0],headline='entry-yexiaoting')
+    entry1.save()
+
+    #查找与反向查找
+    e=Entry.objects.all()[0]    #Entry.objects.all()查找出的是一个[ ] 列表
+    e.blog
+    b=Blog.objects.all()[0]     #Blog.objects.all()查找出的是一个[ ] 列表
+    b.entry_set.all()
+_________________________________________________________
+
+   查询深入
+    字段+双下划线+条件字符  (gt:大于  gte:大于等于 lt:小于  lte:小于等于)
+    In [9]: b.objects.filter(id__gt=1)
+    Out[9]: [<b: b>, <b: c>, <b: d>, <b: e>]
+
+    In [10]: b.objects.filter(id__gte=1)
+    Out[10]: [<b: a>, <b: b>, <b: c>, <b: d>, <b: e>]
+
+    In [11]: b.objects.filter(id__gte=1).filter(id__lte=2)
+    Out[11]: [<b: a>, <b: b>]
+
+    In [12]: for i in b.objects.filter(id__gte=1).filter(id__lte=2):
+   ....:     print i.id
+   ....:
+        1
+        2
+    In [30]: User.objects.filter(id__gt=1)
+    Out[30]: [<User: User object>, <User: User object>, <User: User object>, <User: User object>]
+
+    In [31]: User.objects.filter(id__gt=1,id__lte=2)
+    Out[31]: [<User: User object>]
+
+    In [32]: User.objects.filter(id__gt=1,id__lte=2)[0].id
+    Out[32]: 2
+
+
+"""
