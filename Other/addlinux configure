@@ -1,0 +1,82 @@
+--------------------------------------------------------------
+增加andlinux空间大小
+本来机子装了UBUTNU耍了阵子，不过确实发现里面很多东西很不方便，所以就又换回WINDOWS，不过还是想在机子上配置个LINUX环境，就还是用上了ANDLINUX，默认安装以后的空间大小是2G，完全不够赛，所以又想起了增加他的空间大小，看了下原来自己的文章，发现那个方法不是太安逸。因为是通过挂载到了其他的节点上。今天网上看到这个方法不错，去官网看了哈，确实是的，实验成功。
+ 
+1.进入andlinux的Drivers目录
+运行cmd命令
+fsutil file createnew fs.vdi 10737418240 
+瞬间就建好了一个10G的文件
+ 
+2.修改配置文件@settings.txt
+挂载 
+cobd3=Drives\fs.vdi
+
+3.启动进入系统运行
+sudo dd if=/dev/cobd0 of=/dev/cobd3
+复制本来的根分区给刚才的文件
+
+4.关闭系统修改配置文件@settings.txt
+cobd0=Drives\fs.vdi
+取消原来的cobd0
+ 
+5.启动进入系统运行命令
+resize2fs -p /dev/cobd0
+ 
+OK啦......
+另一种方法：
+用自带的ImageResizeTool.zip工具把Drivers目录下的base.drv大小改大一点，一般8g左右足够了。
+重启以后运行Konsole进入命令行操作。
+apt-get install ext2resize然后ext2online /dev/cobd0更新一下步骤2改变的分区的大小。
+----------------------------------------------------------------------------
+Ubuntu  更新源
+deb http://mirrors.163.com/ubuntu/ lucid main universe restricted multiverse
+deb-src http://mirrors.163.com/ubuntu/ lucid main universe restricted multiverse
+deb http://mirrors.163.com/ubuntu/ lucid-security universe main multiverse restricted
+deb-src http://mirrors.163.com/ubuntu/ lucid-security universe main multiverse restricteddeb http://mirrors.163.com/ubuntu/ lucid-updates universe main multiverse restricteddeb http://mirrors.163.com/ubuntu/ lucid-proposed universe main multiverse restricted
+deb-src http://mirrors.163.com/ubuntu/ lucid-proposed universe main multiverse restricted
+deb http://mirrors.163.com/ubuntu/ lucid-backports universe main multiverse restricted
+deb-src http://mirrors.163.com/ubuntu/ lucid-backports universe main multiverse restricted
+deb-src http://mirrors.163.com/ubuntu/ lucid-updates universe main multiverse restricted
+
+----------------------------------------------------------------------------
+1.andLinux里显示中文
+
+   首先，进级andLinux
+      apt-get update
+   然后安装中文根本包
+     apt-get install language-pack-zh
+   再装置kde的基础中文包
+     sudo apt-get install language-pack-kde-zh-base language-pack-kde-zh
+   修正/etc/environment中的环境变量
+     LANG="zh_CN.GBK"
+     LANGUAGE="zh_CN:zh:en_US:en"
+   从Windows XP中拷贝simsun, tahoma, tahomabd等爱好的字体到andlinux下
+   应用KControl安装字体到andLinux中,再设置区域，语言，和字体
+   从新启动，就可以看到效果了，能够设置的跟Windows下文字视觉后果一样
+
+  不是治理员权限的话，记得要sudo哦~呵呵
+
+2.andLinux里设置字体
+
+   安装wqy:
+   apt-get install xfonts-wqy
+   运行kcontrol,设置字体和区域。
+
+3.中文输入法
+
+   好了，现在再启动andLinux应当可能显示中文了。但是中文还是无奈输入啊！别焦急，嘿嘿。
+   设置环境变量:
+
+PATH=”/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/bin/X11:/usr/games”
+LANG=”zh_CN.UTF-8″
+LC_ALL=”zh_CN.UTF-8″
+LANGUAGE=”zh_CN.UTF-8″
+export XMODIFIERS=@im=fcitx
+
+   留神照着修改。嘿嘿。接着安装fcitx:
+    apt-get install fcitx.
+尝尝:重新启动andLinux,在终端运行fcitx 怎么样，是不是呈现了fcitx的小窗口?
+
+先把windows的输入法换到英文，然后鼠标点击fcitx窗口的企鹅图标，哈哈，中文输入能用了！再按Ctrl+space,就能切换linux下的中英文了。
+
+
