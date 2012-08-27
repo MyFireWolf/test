@@ -1,0 +1,41 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>无标题文档</title>
+<link href="css/divcss.css" rel="stylesheet" type="text/css" />
+</head>
+
+<body>
+<div id="main">
+
+<div id="top-show">  	
+    <div id="logmake"><img src="images/Logo.gif" width="88" height="31" /></div>
+    <div id="top-left">
+      <a href="index">首页</a>&nbsp;|
+      <a href="download">下载</a>&nbsp;|
+      <a href="uploadfile">上传文件</a>&nbsp;|
+      <a href="">在线应用</a>&nbsp;|
+    </div>
+    <div id="top-right">
+          <a href="admin">管理员登录</a>&nbsp;|
+          <a href="register" >注册</a>&nbsp;| 
+    </div>
+    
+    <div id="top"><strong> 上传文件 </strong>
+    <hr />
+  </div>
+   <center>
+        <form action="" method="post" enctype="multipart/form-data">
+               <table>
+                    {{ form.as_table }}
+               </table>       
+            <input name="" type="submit" value="提交" />
+         
+    	</form>
+    </center>
+   
+
+</div>
+</body>
+</html>

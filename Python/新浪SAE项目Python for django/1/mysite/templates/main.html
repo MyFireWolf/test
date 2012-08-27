@@ -1,0 +1,83 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>首 页</title>
+<link href="css/divcss.css" rel="stylesheet" type="text/css" />
+</head>
+
+<body>
+<div id="main">
+  <div id="top-show">  	
+    <div id="logmake"><img src="images/Logo.gif" width="88" height="31" /></div>
+    <div id="top-left">
+      <a href="index">首页</a>&nbsp;|
+      <a href="download">下载</a>&nbsp;|
+      <a href="uploadfile">上传文件</a>&nbsp;|
+      <a href="">在线应用</a>&nbsp;|
+    </div>
+    <div id="top-right">
+          <a href="admin">管理员登录</a>&nbsp;|
+          <a href="register" >注册</a>&nbsp;| 
+    </div>
+  </div>
+  
+  <div id="top">   
+    <strong>主页基于新浪SAE:  Django框架+Python+MySql 制作 </strong>
+    <hr />
+  </div>
+  <div id="diaohang"></div>
+  <div id="main-main">
+  <h3>JQuery实例  （采用最新版jquery-1.7.1.js）</h3>
+  </div>  
+  <a id="test" href="http://jquery.com/">jQuery</a> 
+  <script src="js/jquery-1.7.1.js"></script> 
+   <script> 
+     $(document).ready(function(){  
+       $("a.test").click(function(event){  
+         alert("As you can see, the link no longer took you to jquery.com");  
+         event.preventDefault();  
+       });  
+     });  
+   </script> 
+   
+    <script type="text/javascript">  
+        $(document).ready(function()  
+        {  
+            //动画速度  
+            var speed = 500;  
+ 
+            //绑定事件处理  
+            $("#btnShow").click(function(event)  
+            {  
+                //取消事件冒泡  
+                event.stopPropagation();  
+                //设置弹出层位置  
+                var offset = $(event.target).offset();  
+                $("#divPop").css({ top: offset.top + $(event.target).height() + "px", left: offset.left });  
+                //动画显示  
+                $("#divPop").show(speed);  
+ 
+            });  
+            //单击空白区域隐藏弹出层  
+            $(document).click(function(event) { $("#divPop").hide(speed) });  
+            //单击弹出层则自身隐藏  
+            $("#divPop").click(function(event) { $("#divPop").hide(speed) });  
+        });  
+    </script>  
+ 
+  
+    <div>  
+        <br /><br /><br />  
+        <button id="btnShow">显示提示文字</button>  
+    </div>  
+          
+    <!-- 弹出层 -->  
+    <div id="divPop" style="background-color: #f0f0f0; border: solid 1px #000000; position: absolute; display:none;  
+        width: 300px; height: 100px;">  
+        <div style="text-align: center;" >弹出层</div>  
+    </div>  
+
+</div>
+</body>
+</html>

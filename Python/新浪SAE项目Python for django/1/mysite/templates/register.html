@@ -1,0 +1,52 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>用户注册</title>
+</head>
+
+<body>
+<center>
+<h1>用户注册</h1>
+<form action="" method="post">
+  <table>
+    {{ orm.as_table }}
+  </table>
+	<hr />
+
+        <div class="field">
+            {{ form.name.errors }}
+            <label for="id_name">用户名:</label>
+            {{ form.name }}
+        </div>
+        <div class="field">
+            {{ form.passwd.errors }}
+            <label for="id_passwd">密  码:</label>
+            {{ form.passwd }}
+        </div>
+        <div class="field">
+            {{  form.repasswd.errors }}
+            <label for="id_repasswd">确认密码:</label>
+            {{ form.repasswd }}
+        </div>
+        <div class="field">
+            {{ form.email.errors }}
+            <label for="id_email">Email:</label>
+            {{ form.email }}
+        </div>
+
+  <label>
+    <input type="reset" name="button" id="button" value="重置" />
+  </label>
+  &nbsp;&nbsp;&nbsp;&nbsp;
+  <label>
+    <input type="submit" name="button2" id="button2" value="提交" />
+  </label>
+</form>
+
+</center>
+
+       
+
+</body>
+</html>

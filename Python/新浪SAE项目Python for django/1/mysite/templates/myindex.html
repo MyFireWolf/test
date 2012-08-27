@@ -1,0 +1,16 @@
+<html>
+<head><title>查询结果:...</title></head>
+<body>
+<center>
+<h1>此用户已存在</h1>
+<p>用户ID: {{ id }}</p>
+<p>用户名: {{ name }}</p>
+
+<form action="search" method="get">
+        <input type="text" name="name">
+        <input type="submit" value="Search">
+    </form>
+<a href="/search">返回继续查询</a>
+</center>
+</body>
+</html>
