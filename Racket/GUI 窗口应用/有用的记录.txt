@@ -1,0 +1,5 @@
+调用Win32 API时，遇到中文字符的参数，只要把对应数据类型写成 _string/utf-16 就可以完成 utf8->WidChar 转换，不必使用 MultiByteToWideChar
+(define ((example who put? multi? dir?)
+         arg1 arg2)
+    (print "w-func"))
+((example 1 2 3 4) 5 6)
