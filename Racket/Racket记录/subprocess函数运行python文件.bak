@@ -1,0 +1,13 @@
+#lang racket
+
+(define-values (sp i o e) (subprocess #f #f #f
+          "c:/pypy/pypy.exe"
+          "c:/foo.py"))
+
+(display "server\n" o)
+
+(flush-output o)
+
+(display (read-line i))
+
+;;; (subprocess #f #f #f #f "xxx.exe")

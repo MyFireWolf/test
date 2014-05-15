@@ -28,12 +28,3 @@
      (print isy?)]))
 ((a #f) "y")
 ((a #f) "y" "n")
-
-
-;#lang racket/gui
-(require racket/gui)
-(define ((check i) btn evt)
-  (message-box "." (if (= i 5) "Yes" "No")))
-
-(check 5) ;显示　#<procedure:...�case-lambda.rkt:35:0>
-((check 5) 6 7)

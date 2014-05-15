@@ -12,7 +12,7 @@
                               (lambda ()
                                 (set! end (current-milliseconds))
                                 (set! duration (- end start))
-                                (send my-dc clear)(print "hello")
+                                (send my-dc clear)
                                 (send my-dc draw-text (format-time duration) x-pos y-pos))]))
 (define my-canvas%
   (class canvas%

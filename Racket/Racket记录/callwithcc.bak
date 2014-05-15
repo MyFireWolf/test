@@ -52,26 +52,3 @@
 
 (define (pyth x y)
  (sqrt (+ (* x x) (* y y))))
-
-
-
-#|
-(define (pyth& x y k)
- (*& x x (lambda (x2)
-          (*& y y (lambda (y2)
-                   (+& x2 y2 (lambda (x2py2)
-                              (sqrt& x2py2 k))))))))
-
-(def web-app (web-while (constantly true)
-                        (web-seq get-name
-                                 get-age
-                                 get-gender
-                                 (web-cond
-                                   male? male-options
-                                   :else female-options)
-                                 show-summary)))
-
-(defroutes new-file-routes
-           (ANY "/app-url"
-                (handle-request request web-app)))
-|#

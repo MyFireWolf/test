@@ -26,7 +26,7 @@
 
 
 ;;;-----------------------------------------;;;
-;#lang web-server/insta
+#lang web-server/insta
 ; start: request -> response
 (define (start request)
   (show-counter 0 request))

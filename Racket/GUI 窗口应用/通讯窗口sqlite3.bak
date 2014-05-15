@@ -30,8 +30,8 @@
 [label ""] 
 [parent main-view] 
 [choices (query-list mydb "select name from contacts")] 
-[style (list 'single 'column-headers)] 
-[columns '("姓名" )])) 
+[style (list 'single)] 
+[columns '("姓名")])) 
 
 
 (define btn-add (new button% 

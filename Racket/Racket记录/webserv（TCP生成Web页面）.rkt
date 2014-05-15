@@ -1,5 +1,5 @@
 #lang racket
-(require xml net/url)
+(require xml)
 (define (serve port-no)
   (define listener (tcp-listen port-no 5 #t))  
   (define (loop) 
@@ -20,15 +20,15 @@
   (display "Server: k\r\nContent-Type: text/html\r\n\r\n" out)  
   (display (xexpr->string '(html  (head (title "Hello")) (body (a ((href "http://www.qq.com"))(p "qq"))))) out)) 
 
-(serve 55555)
+(serve 80)
 ;;;(define html-string (xexpr->string '(html  (head (title "Hello")) (body (a ((href "http://www.qq.com"))(p "qq"))))))
 ;;;<html><head><title>Hello</title></head><body><a half="http://www.qq.com"><p>qq</p></a></body></html>
 
 
 
-
+#|
 ;;首先加载TCP协议模块
-（require Scheme/tcp)
+(require Scheme/tcp)
 
 ;;定义一个server的线程
 
@@ -53,3 +53,4 @@
        (close-input-port in)
       (kill-thread client)))))
 
+|#

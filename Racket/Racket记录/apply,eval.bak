@@ -1,0 +1,14 @@
+#lang racket
+(struct a (x y))
+(define aa (a 8 9))
+
+(fprintf (current-output-port) "~a aa\r\nwww\r\nwww\r\n" aa)
+(string->list "hello world")
+
+(map (lambda (c)
+                (case c
+                  [(#\<) "&lt;"]
+                  [(#\>) "&gt;"]
+                  [(#\&) "&amp;"]
+                  [else (string c)]))
+              (string->list "hello world"))
